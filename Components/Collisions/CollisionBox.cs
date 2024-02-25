@@ -70,10 +70,10 @@ namespace Components.Collisions
     public event EventHandler<CollisionData> OnCollision;
 
     // Constructor without metadata
-    public CollisionBox(Transform transform, string tag, CollisionHandler parentCollisionHandler)
+    public CollisionBox(string tag, CollisionHandler parentCollisionHandler, GameObject parent)
     {
       active = true;
-      this.transform = transform;
+      this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       this.tag = tag;
       AddToCollection(this);
       OnCollision += parentCollisionHandler.OnCollision;

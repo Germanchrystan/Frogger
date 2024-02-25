@@ -6,14 +6,12 @@ using Prefabs;
 
 namespace Entities
 {
-  public class Tile
+  public class Tile: GameObject
   {
-    Transform transform;
-    Renderer renderer;
     public Tile(Texture2D texture, Vector2 position, Color color)
     {
-      transform = new Transform(position, new Vector2(Constants.General.SIZE,Constants.General.SIZE));
-      renderer = new Renderer(texture, transform, color, 0);
+      Components.Add(Constants.Components.TRANSFORM, new Transform(position, new Vector2(Constants.General.SIZE,Constants.General.SIZE)));
+      Components.Add(Constants.Components.RENDERER, new Renderer(texture, color, 0, this));
     }
   }
 
