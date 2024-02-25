@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework;
-using Prefabs;
+using Prototypes;
 
 namespace Components;
 

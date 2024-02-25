@@ -1,4 +1,4 @@
-using Prefabs;
+using Prototypes;
 
 namespace Components
 {

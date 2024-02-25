@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using Entities;
 using Microsoft.Xna.Framework.Graphics;
-using Prefabs;
+using Prototypes;
 
 namespace Levels
 {
