@@ -7,7 +7,6 @@ namespace Components
 {
   public class Updater
   {
-
     public static List<UpdateableComponent> UpdaterList = new List<UpdateableComponent>();
     
     public static void Update(GameTime gameTime)
@@ -19,9 +18,9 @@ namespace Components
     }
   }
 
-  public class MovingObjectUpdater: UpdateableComponent
+  public class MovingObjectUpdater: Component, UpdateableComponent
   {
-    private Actor parent;
+    private GameObject parent;
     public MovingObjectUpdater(MovingObject parent)
     {
       this.parent = parent;
@@ -30,10 +29,10 @@ namespace Components
     public void Update(GameTime gameTime)
     {
       float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-      Movement movement = parent.GetMovement();
-      Transform transform = parent.GetTransform();
+      Movement movement = parent.GetComponent<Movement>(Constants.Components.MOVEMENT);
+      Transform transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       float xVelocity =  movement.speed * movement.xDirection * dt;
-      parent.GetTransform().Position = new Vector2(transform.Position.X + xVelocity, transform.Position.Y);
+      transform.Position = new Vector2(transform.Position.X + xVelocity, transform.Position.Y);
       if (movement.xDirection < 0 && transform.Rect.X < -Constants.General.SIZE)
       {
         transform.Position = new Vector2(Constants.General.WINDOW_WIDTH, transform.Position.Y);

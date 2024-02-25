@@ -29,10 +29,10 @@ namespace Components
     Transform transform;
     Texture2D texture;
     int layer;
-    public Renderer(Texture2D texture, Transform transform, Color color, int layer)
+    public Renderer(Texture2D texture, Color color, int layer, GameObject parent)
     {
       this.color = color;
-      this.transform = transform;
+      this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       this.texture = texture;
       this.layer = layer;
       AddToList(this);

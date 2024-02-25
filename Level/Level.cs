@@ -27,7 +27,7 @@ namespace Levels
 
     public uint[,] BackgroundRep;
     public uint[,] ActorsRep;
-    public Actor[] ActorsPool;
+    public GameObject[] ActorsPool;
     public Tile[] TilesPool;
     Texture2D texture;
     public Level(Texture2D texture, uint[,] BackgroundRep, uint[,] ActorsRep)
@@ -41,7 +41,7 @@ namespace Levels
     public void Load()
     {
       List<Tile> tmpTileList = new List<Tile>();
-      List<Actor> tmpActorList = new List<Actor>();
+      List<GameObject> tmpActorList = new List<GameObject>();
 
       for(int i = 0; i < 11; i++)
       {
@@ -49,7 +49,7 @@ namespace Levels
         {
           Vector2 position = new Vector2(Constants.General.SIZE * j, Constants.General.SIZE * i);
           Tile newTile = intToTile(BackgroundRep[i, j], position);
-          Actor newActor = intToActor(ActorsRep[i, j], position);
+          GameObject newActor = intToActor(ActorsRep[i, j], position);
           if (newTile != null) tmpTileList.Add(newTile);
           if(newActor != null) tmpActorList.Add(newActor);
         }
@@ -73,7 +73,7 @@ namespace Levels
       }      
     }
 
-    public Actor intToActor(uint rep, Vector2 position)
+    public GameObject intToActor(uint rep, Vector2 position)
     {
       switch((ACTOR)rep)
       {

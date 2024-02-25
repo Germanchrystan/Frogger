@@ -1,6 +1,8 @@
+using Prefabs;
+
 namespace Components
 {
-  public class Movement
+  public class Movement: Component
   {
     public int xDirection;
     public int yDirection;
