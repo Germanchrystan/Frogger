@@ -1,8 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Components;
-using Components.Collisions;
-using Prefabs;
+using Prototypes;
 
 namespace Entities
 {

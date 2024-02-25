@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Prefabs;
+using Prototypes;
 
 namespace Components.Collisions
 {
