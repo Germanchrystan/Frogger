@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Levels;
+using Managers;
 
 namespace Frogger;
 
@@ -45,6 +46,7 @@ public class Game1 : Game
             Exit();
 
         Updater.Update(gameTime);
+        CollisionManager.Update();
 
         base.Update(gameTime);
     }
