@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Prototypes;
 
 namespace Components.Collisions
@@ -18,10 +20,16 @@ namespace Components.Collisions
     }
   }
   
-  public struct CollisionList
+  public class CollisionList
   {
-    public int activeNum;
+    private int activeNum;
+    public int ActiveNum { get { return activeNum; } set { activeNum = value; }}
     public List<CollisionBox> list;
+    public CollisionList()
+    {
+      this.activeNum = 0;
+      this.list = new List<CollisionBox>();
+    }
   }
 
   public class CollisionBox : Component
@@ -32,9 +40,11 @@ namespace Components.Collisions
     {
       if(!CollisionBoxCollection.ContainsKey(collisionBox.GetTag()))
       {
-        CollisionBoxCollection[collisionBox.GetTag()] = new CollisionList(){ activeNum = 0, list = new List<CollisionBox>()};
+        CollisionBoxCollection[collisionBox.GetTag()] = new CollisionList();
       }
+        CollisionBoxCollection[collisionBox.GetTag()].ActiveNum += 1;
         CollisionBoxCollection[collisionBox.GetTag()].list.Add(collisionBox);
+
     }
     public static void DeactivateColliderBox(CollisionBox collisionBox)
     {
@@ -46,7 +56,7 @@ namespace Components.Collisions
       collisionListItem.list[collisionListItem.list.Count - 1] = collisionBox;
       collisionListItem.list [index] = temp;
       
-      collisionListItem.activeNum--;
+      collisionListItem.ActiveNum--;
     }
 
     public static void ActivateColliderBox(CollisionBox collisionBox)
@@ -55,28 +65,55 @@ namespace Components.Collisions
       int index = collisionListItem.list.IndexOf(collisionBox);
       if(index == -1) throw new Exception("Collision box was not present in collection");
 
-      CollisionBox temp = collisionListItem.list[collisionListItem.activeNum];
-      collisionListItem.list[collisionListItem.activeNum] = collisionBox;
+      CollisionBox temp = collisionListItem.list[collisionListItem.ActiveNum];
+      collisionListItem.list[collisionListItem.ActiveNum] = collisionBox;
       collisionListItem.list[index] = temp;
 
-      collisionListItem.activeNum++;
+      collisionListItem.ActiveNum++;
     }
 
     // Instance
     private string tag;
     private Transform transform;
     private bool active;
+    // Remove this once child transform is tested
+    // private Renderer renderer;
 
     public event EventHandler<CollisionData> OnCollision;
 
-    // Constructor without metadata
+    // Constructor without child transform
     public CollisionBox(string tag, CollisionHandler parentCollisionHandler, GameObject parent)
     {
       active = true;
-      this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       this.tag = tag;
+      this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       AddToCollection(this);
       OnCollision += parentCollisionHandler.OnCollision;
+    }
+
+    // Constructor with child transform
+    public CollisionBox(string tag, CollisionHandler parentCollisionHandler, GameObject parent, Vector2 offset, Vector2 size) //, Texture2D texture)
+    {
+      active = true;
+      this.tag = tag;
+      Transform parentTransform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
+      this.transform = new Transform(offset, size, parentTransform);
+      AddToCollection(this);
+      OnCollision += parentCollisionHandler.OnCollision;
+      // Remove this once child transform is tested
+      // this.renderer = new Renderer(texture, Color.BlueViolet, 10, new GameObject().AddComponent(Constants.Components.TRANSFORM, transform));
+    }
+
+    public CollisionBox setSize(Vector2 size)
+    {
+      this.transform.Size = size;
+      return this;
+    }
+
+    public CollisionBox setOffset(Vector2 offset)
+    {
+      this.transform.Offset = offset;
+      return this;
     }
 
     public bool IsActive() { return active; }
