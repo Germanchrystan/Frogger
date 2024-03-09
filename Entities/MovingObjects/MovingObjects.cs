@@ -12,12 +12,12 @@ namespace Entities
     {
       Components.Add(Constants.Components.TRANSFORM, new Transform(position, new Vector2(Constants.General.SIZE,Constants.General.SIZE)));
       Components.Add(Constants.Components.COLLISION_BOX, new CollisionBox(tag, this, this));
-      Components.Add(Constants.Components.MOVEMENT, new Movement(50, xDirection));
+      Components.Add(Constants.Components.MOVEMENT, new Movement(50, xDirection, 0));
       Components.Add(Constants.Components.RENDERER, new Renderer(texture, color, 5, this));
       Components.Add(Constants.Components.UPDATER, new MovingObjectUpdater(this));
     }
 
-    public void OnCollision(object source, CollisionData collisionData)
+    public void OnCollision(object source, CollisionBox colliding)
     {
       
     }

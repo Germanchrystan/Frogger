@@ -2,25 +2,43 @@ using Microsoft.Xna.Framework;
 
 using Components;
 using Prototypes;
+using System;
 
 namespace Entities
 {
   public class PlayerUpdater: Component, UpdateableComponent
   {
     Input input;
-    Transform transform;
+    Transform transform, spawnPoint;
+    Movement movement;
+    StateManager stateManager;
     int xDirection = 0;
     int yDirection = 0;
     public PlayerUpdater(GameObject parent)
     {
       input = parent.GetComponent<Input>(Constants.Components.INPUT);
       transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
+      movement = parent.GetComponent<Movement>(Constants.Components.MOVEMENT);
+      stateManager = parent.GetComponent<StateManager>(Constants.Components.STATE_MANAGER);
+      spawnPoint = parent.GetComponent<Transform>(Constants.Components.SPAWN_POINT);
       Updater.UpdaterList.Add(this);
     }
     public void Update(GameTime gameTime)
     {
+      if (stateManager.GetState == PlayerConstants.PLAYING)
+      {
+        PlayingStateUpdate(gameTime);
+      }
+      if (stateManager.GetState == PlayerConstants.DEAD)
+      { 
+        DeadStateUpdate(gameTime);
+      }
+    }
+    public void PlayingStateUpdate(GameTime gameTime)
+    {
+      float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
       string incomingCommand = input.CheckAndGetCommand();
-      if (incomingCommand == null) return;   
+      if (incomingCommand == null) return;
 
       if (incomingCommand == Constants.Commands.COMMAND_UP)
       {
@@ -66,6 +84,26 @@ namespace Entities
         xDirection = 0;
         return;
       }
+
+      // Log movement
+      if (movement.xDirection < 0)
+      {
+        float newXMovmenet = Math.Max(0, transform.Position.X + movement.xDirection * movement.speed * dt);
+        transform.Position = new Vector2(newXMovmenet, transform.Position.Y);
+      }
+      if (movement.xDirection > 0)
+      {
+        float newXMovmenet = Math.Min(Constants.General.WINDOW_WIDTH - Constants.General.SIZE, transform.Position.X + movement.xDirection * movement.speed * dt);
+        transform.Position = new Vector2(newXMovmenet, transform.Position.Y);
+      }
+      movement.resetMovement();
+      stateManager.SetState(PlayerConstants.PLAYING);
+    }
+
+    public void DeadStateUpdate(GameTime gameTime)
+    {
+      transform.Position = new Vector2(spawnPoint.Position.X, spawnPoint.Position.Y);
+      stateManager.SetState(PlayerConstants.PLAYING);
     }
   }
 }
