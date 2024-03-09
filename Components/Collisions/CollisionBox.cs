@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Prototypes;
 
 namespace Components.Collisions
@@ -76,16 +75,18 @@ namespace Components.Collisions
     private string tag;
     private Transform transform;
     private bool active;
+    private GameObject parent;
     // Remove this once child transform is tested
     // private Renderer renderer;
 
-    public event EventHandler<CollisionData> OnCollision;
+    public event EventHandler<CollisionBox> OnCollision;
 
     // Constructor without child transform
     public CollisionBox(string tag, CollisionHandler parentCollisionHandler, GameObject parent)
     {
       active = true;
       this.tag = tag;
+      this.parent = parent;
       this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       AddToCollection(this);
       OnCollision += parentCollisionHandler.OnCollision;
@@ -98,6 +99,7 @@ namespace Components.Collisions
       this.tag = tag;
       Transform parentTransform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       this.transform = new Transform(offset, size, parentTransform);
+      this.parent = parent;
       AddToCollection(this);
       OnCollision += parentCollisionHandler.OnCollision;
       // Remove this once child transform is tested
@@ -120,10 +122,11 @@ namespace Components.Collisions
     public void SetActive(bool value) { active = value; }
     public string GetTag() { return tag; }
     public Transform GetTransform() { return transform; }
+    public GameObject Parent { get { return parent; }}
 
     public void CollisionDetected(CollisionBox collider)
     {
-      if (OnCollision != null) OnCollision(this, new CollisionData(collider.GetTag(), collider.GetTransform()));
+      if (OnCollision != null) OnCollision(this, collider);
     }
     ~CollisionBox() { CollisionBoxCollection[GetTag()].list.Remove(this); }
   }

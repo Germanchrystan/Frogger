@@ -4,6 +4,6 @@ namespace Prototypes
 {
     public interface CollisionHandler
     {
-        public void OnCollision(object source, CollisionData collisionData);
+        public void OnCollision(object source, CollisionBox colliding);
     }
 }

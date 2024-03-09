@@ -47,6 +47,7 @@ public class Game1 : Game
 
         Updater.Update(gameTime);
         CollisionManager.Update();
+        StateManager.UpdateStates();
 
         base.Update(gameTime);
     }

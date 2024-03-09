@@ -22,22 +22,34 @@ namespace Entities
     };
     
     int speed = 100;
+
     public Player(Texture2D texture, Vector2 position)
     {
+      Components.Add(Constants.Components.SPAWN_POINT, new Transform(position, new Vector2(General.SIZE, General.SIZE)));
       Components.Add(Constants.Components.TRANSFORM, new Transform(position, new Vector2(General.SIZE, General.SIZE)));
       Components.Add(Constants.Components.COLLISION_BOX, new CollisionBox(Tags.PLAYER, this, this, new Vector2(2,2), new Vector2(28, 28))); //, texture));
+      Components.Add(Constants.Components.STATE_MANAGER, new StateManager(this, PlayerConstants.PLAYING));
       Components.Add(Constants.Components.INPUT, new Input(playerBindings));
-      Components.Add(Constants.Components.MOVEMENT, new Movement(speed, 0));
+      Components.Add(Constants.Components.MOVEMENT, new Movement(speed, 0, 0));
       Components.Add(Constants.Components.UPDATER, new PlayerUpdater(this));
       Components.Add(Constants.Components.RENDERER, new Renderer(texture, Color.Green, 7, this));
     }
 
-    public void OnCollision(object source, CollisionData collisionData)
+    public void OnCollision(object source, CollisionBox colliding)
     {
-      Console.WriteLine(collisionData.ColliderTag);
-      if (collisionData.ColliderTag == Tags.LOG)
+      Movement movement = GetComponent<Movement>(Constants.Components.MOVEMENT);
+      StateManager stateManager = GetComponent<StateManager>(Constants.Components.STATE_MANAGER);
+
+      colliding.Parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
+      if (colliding.GetTag() == Tags.LOG)
       {
-        // this.GetComponent<Movement>(Constants.Components.MOVEMENT).yDirection += 
+        Movement collidingMovement = colliding.Parent.GetComponent<Movement>(Constants.Components.MOVEMENT);
+        movement.xDirection = collidingMovement.xDirection;
+        movement.speed = collidingMovement.speed;
+      }
+      if (colliding.GetTag() == Tags.CAR)
+      {
+        stateManager.SetState(PlayerConstants.DEAD);
       }
     }
   }
