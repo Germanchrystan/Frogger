@@ -7,7 +7,7 @@ namespace Utils
 {
   class QuickSort
   {
-    public static void Sort(List<Renderer> list, int left, int right)
+    public static void Sort(List<Renderable> list, int left, int right)
     {
       if (left < right)
       {
@@ -16,7 +16,7 @@ namespace Utils
         Sort(list, pivot + 1, right);
       }
     }
-    private static int Partition(List<Renderer> list, int left, int right)
+    private static int Partition(List<Renderable> list, int left, int right)
     {
       int pivot = list[right].Layer;
       int i = left - 1;
@@ -26,13 +26,13 @@ namespace Utils
         if (list[j].Layer <= pivot)
         {
           i++;
-          Renderer temp = list[i];
+          Renderable temp = list[i];
           list[i] = list[j];
           list[j] = temp;
         }
       }
       
-      Renderer temp1 = list[i+1];
+      Renderable temp1 = list[i+1];
       list[i+1] = list[right];
       list[right] = temp1;
 

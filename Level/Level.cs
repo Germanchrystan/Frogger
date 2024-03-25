@@ -10,8 +10,13 @@ namespace Levels
   {
     enum TILE
     {
-      WALKWAY = 1,
-      STREET,
+      WALKWAY1 = 1,
+      WALKWAY2,
+      STREET1,
+      STREET2,
+      STREET3,
+      STREET4,
+      STREET5,
       GRASS,
     };
     enum ACTOR
@@ -62,12 +67,22 @@ namespace Levels
     {
       switch((TILE)rep)
       {
-        case TILE.WALKWAY:
-          return Tiles.WalkwayTile(texture, position);
-        case TILE.STREET:
-          return Tiles.StreetTile(texture, position);
+        case TILE.WALKWAY1:
+          return Tiles.WalkwayTile(0, position);
+        case TILE.WALKWAY2:
+          return Tiles.WalkwayTile(1, position);
+        case TILE.STREET1:
+          return Tiles.StreetTile(0, position);
+        case TILE.STREET2:
+          return Tiles.StreetTile(1, position);
+        case TILE.STREET3:
+          return Tiles.StreetTile(2, position);
+        case TILE.STREET4:
+          return Tiles.StreetTile(3, position);
+        case TILE.STREET5:
+          return Tiles.StreetTile(4, position);
         case TILE.GRASS:
-          return Tiles.GrassTile(texture, position);
+          return Tiles.GrassTile(position);
         default:
           return null;
       }      
@@ -78,15 +93,15 @@ namespace Levels
       switch((ACTOR)rep)
       {
         case ACTOR.PLAYER:
-          return new Player(texture, position);
+          return new Player(position);
         case ACTOR.TO_RIGHT_LOG:
-          return MovingObjects.NormalLog(texture, position, 1);
+          return MovingObjects.NormalLog(position, 1);
         case ACTOR.TO_LEFT_LOG:
-          return MovingObjects.NormalLog(texture, position, -1);
+          return MovingObjects.NormalLog(position, -1);
         case ACTOR.NORMAL_TO_RIGHT_CAR:
-          return MovingObjects.NormalCar(texture, position, 1);
+          return MovingObjects.NormalCar(position, 1);
         case ACTOR.NORMAL_TO_LEFT_CAR:
-          return MovingObjects.NormalCar(texture, position, -1);
+          return MovingObjects.NormalCar(position, -1);
         default:
           return null;
       }

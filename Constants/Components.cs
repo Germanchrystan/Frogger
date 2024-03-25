@@ -10,5 +10,6 @@ namespace Constants
     public static string MOVEMENT = "MOVEMENT";
     public static string STATE_MANAGER = "STATE_MANAGER";
     public static string SPAWN_POINT = "SPAWN_POINT";
+    public static string ANIMATOR = "ANIMATOR";
   }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
@@ -7,7 +8,7 @@ using Components;
 using Components.Collisions;
 using Prototypes;
 using Constants;
-using System;
+using Components.GraphicComponents;
 
 namespace Entities
 {
@@ -23,7 +24,7 @@ namespace Entities
     
     int speed = 100;
 
-    public Player(Texture2D texture, Vector2 position)
+    public Player(Vector2 position)
     {
       Components.Add(Constants.Components.SPAWN_POINT, new Transform(position, new Vector2(General.SIZE, General.SIZE)));
       Components.Add(Constants.Components.TRANSFORM, new Transform(position, new Vector2(General.SIZE, General.SIZE)));
@@ -32,7 +33,10 @@ namespace Entities
       Components.Add(Constants.Components.INPUT, new Input(playerBindings));
       Components.Add(Constants.Components.MOVEMENT, new Movement(speed, 0, 0));
       Components.Add(Constants.Components.UPDATER, new PlayerUpdater(this));
-      Components.Add(Constants.Components.RENDERER, new Renderer(texture, Color.Green, 7, this));
+      
+      Animation IdleAnimation = new Animation("Idle", true, new Frame[]{ new Frame(1, new Rectangle(0, 0, General.SIZE, General.SIZE))});
+      Components.Add(Constants.Components.ANIMATOR, new Animator(this, IdleAnimation));
+      Components.Add(Constants.Components.RENDERER, new AnimatorRenderer(7, this));
     }
 
     public void OnCollision(object source, CollisionBox colliding)
