@@ -25,7 +25,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = Constants.General.WINDOW_WIDTH;
         _graphics.PreferredBackBufferHeight = Constants.General.WINDOW_HEIGHT;
         _graphics.ApplyChanges();
-
+        GraphicManager.LoadContent(Content);
         base.Initialize();
     }
 
@@ -47,6 +47,7 @@ public class Game1 : Game
 
         Updater.Update(gameTime);
         CollisionManager.Update();
+        Timer.UpdateTimers(gameTime);
         StateManager.UpdateStates();
 
         base.Update(gameTime);

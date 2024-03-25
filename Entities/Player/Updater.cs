@@ -6,12 +6,13 @@ using System;
 
 namespace Entities
 {
-  public class PlayerUpdater: Component, UpdateableComponent
+  public class PlayerUpdater: Component, UpdateableComponent, TimeOutHandler
   {
     Input input;
     Transform transform, spawnPoint;
     Movement movement;
     StateManager stateManager;
+    Timer toRespawnTimer;
     int xDirection = 0;
     int yDirection = 0;
     public PlayerUpdater(GameObject parent)
@@ -22,6 +23,7 @@ namespace Entities
       stateManager = parent.GetComponent<StateManager>(Constants.Components.STATE_MANAGER);
       spawnPoint = parent.GetComponent<Transform>(Constants.Components.SPAWN_POINT);
       Updater.UpdaterList.Add(this);
+      toRespawnTimer = new Timer(1, "RESPAWN", false, this);
     }
     public void Update(GameTime gameTime)
     {
@@ -102,8 +104,18 @@ namespace Entities
 
     public void DeadStateUpdate(GameTime gameTime)
     {
-      transform.Position = new Vector2(spawnPoint.Position.X, spawnPoint.Position.Y);
-      stateManager.SetState(PlayerConstants.PLAYING);
+      if (!toRespawnTimer.IsActive()) Timer.ActivateTimer(toRespawnTimer);
+      stateManager.SetState(PlayerConstants.DEAD);
+    }
+
+    public void OnTimeOut(object source, string message)
+    {
+      if (message == "RESPAWN")
+      {
+        stateManager.SetState(PlayerConstants.PLAYING);
+        transform.Position = new Vector2(spawnPoint.Position.X, spawnPoint.Position.Y);
+        Timer.DeactivateTimer(toRespawnTimer);
+      }
     }
   }
 }
