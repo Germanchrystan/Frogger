@@ -6,13 +6,12 @@ using System;
 
 namespace Entities
 {
-  public class PlayerUpdater: Component, UpdateableComponent, TimeOutHandler
+  public class PlayerUpdater: Component, UpdateableComponent
   {
     Input input;
-    Transform transform, spawnPoint;
+    Transform transform;
     Movement movement;
     StateManager stateManager;
-    Timer toRespawnTimer;
     int xDirection = 0;
     int yDirection = 0;
     public PlayerUpdater(GameObject parent)
@@ -21,9 +20,7 @@ namespace Entities
       transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       movement = parent.GetComponent<Movement>(Constants.Components.MOVEMENT);
       stateManager = parent.GetComponent<StateManager>(Constants.Components.STATE_MANAGER);
-      spawnPoint = parent.GetComponent<Transform>(Constants.Components.SPAWN_POINT);
       Updater.UpdaterList.Add(this);
-      toRespawnTimer = new Timer(1, "RESPAWN", false, this);
     }
     public void Update(GameTime gameTime)
     {
@@ -99,23 +96,12 @@ namespace Entities
         transform.Position = new Vector2(newXMovmenet, transform.Position.Y);
       }
       movement.resetMovement();
-      stateManager.SetState(PlayerConstants.PLAYING);
+      // stateManager.SetState(PlayerConstants.PLAYING);
     }
 
     public void DeadStateUpdate(GameTime gameTime)
     {
-      if (!toRespawnTimer.IsActive()) Timer.ActivateTimer(toRespawnTimer);
-      stateManager.SetState(PlayerConstants.DEAD);
-    }
-
-    public void OnTimeOut(object source, string message)
-    {
-      if (message == "RESPAWN")
-      {
-        stateManager.SetState(PlayerConstants.PLAYING);
-        transform.Position = new Vector2(spawnPoint.Position.X, spawnPoint.Position.Y);
-        Timer.DeactivateTimer(toRespawnTimer);
-      }
+      // stateManager.SetState(PlayerConstants.DEAD);
     }
   }
 }

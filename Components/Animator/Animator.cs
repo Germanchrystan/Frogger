@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Managers;
 using Microsoft.Xna.Framework;
@@ -20,6 +21,7 @@ namespace Components.GraphicComponents
     private GameObject parent;
     private Timer timer;
     private Texture2D atlas;
+    private StateManager stateManager;
     
     public Animator(GameObject parent)
     {
@@ -36,14 +38,13 @@ namespace Components.GraphicComponents
       this.timer = new Timer(defaultAnimation.GetCurrentFrameDuration(0), "animation over", true, this);
       this.parent = parent;
       this.atlas = GraphicManager.Atlas; // TODO: Change for generic engine
+      this.stateManager = parent.GetComponent<StateManager>(Constants.Components.STATE_MANAGER);
     }
-
     public Animator AddAnimation(Animation animation)
     {
       Animations.Add(animation.Name, animation);
       return this;
     }
-
     public void OnTimeOut(object source, string message)
     {
       float newTimerMax = this.NextFrame();
@@ -51,15 +52,13 @@ namespace Components.GraphicComponents
       if(newTimerMax > 0)
       {
         timer.SetMax(newTimerMax);
+        timer.ResetTimer();
       }
       else
       {
-        currentAnimation = defaultAnimation;
+        if (Animations[currentAnimation].onEndAnimation != null) Animations[currentAnimation].onEndAnimation();
+        // currentAnimation = defaultAnimation;
       }
-    }
-    public void ResetAnimation()
-    {
-      currentFrameIndex = 0;
     }
     private float NextFrame()
     {
@@ -72,8 +71,37 @@ namespace Components.GraphicComponents
 
       return -1;
     }
+    public void ResetAnimation()
+    {
+      currentFrameIndex = 0;
+    }
+    public void ResetTimer()
+    {
+      float newTimerMax = Animations[currentAnimation].Frames[currentFrameIndex].FrameDuration;
+      timer.SetMax(newTimerMax);
+      timer.ResetTimer();
+    }
+    public void setAnimation(string newState)
+    {
+      if (!Animations.ContainsKey(newState)) return;
+      currentAnimation = newState;
+      ResetAnimation();
+      ResetTimer();
+      if (Animations[currentAnimation].onStartAnimation != null)
+      {
+        Animations[currentAnimation].onStartAnimation();
+      }
+    }
+    public void checkAnimatorStatus()
+    {
+      if (stateManager.GetState != currentAnimation)
+      {
+        setAnimation(stateManager.GetState);
+      }
+    }
     public FrameData GetCurrentFrameData()
     {
+      checkAnimatorStatus();
       return new FrameData
       {
         rect = Animations[currentAnimation].Frames[currentFrameIndex].SpriteRect,

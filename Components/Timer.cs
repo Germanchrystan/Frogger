@@ -69,7 +69,7 @@ namespace Components
       else AddInactiveTimer(this);
     }
 
-    private void ResetTimer() { runningTime = max; }
+    public void ResetTimer() { runningTime = max; }
     public void SetMax(float newMax) { max = newMax; }
     private void Update(GameTime gameTime)
     {

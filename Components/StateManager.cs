@@ -42,6 +42,11 @@ namespace Components
     {
       nextState = state;
     }
+    public void SetState(string state, bool setDefaultState)
+    {
+      nextState = state;
+      if(setDefaultState) defaultState = state;
+    }
 
     public void UpdateState()
     {
