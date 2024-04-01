@@ -121,6 +121,7 @@ namespace Components.Collisions
     public bool IsActive() { return active; }
     public void SetActive(bool value) { active = value; }
     public string GetTag() { return tag; }
+    public void SetTag(string newTag) { this.tag = newTag; }
     public Transform GetTransform() { return transform; }
     public GameObject Parent { get { return parent; }}
 

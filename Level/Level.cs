@@ -18,6 +18,10 @@ namespace Levels
       STREET4,
       STREET5,
       GRASS,
+      WATER1,
+      WATER2,
+      WATER3,
+      WATER4,
     };
     enum ACTOR
     {
@@ -28,6 +32,7 @@ namespace Levels
       NORMAL_TO_RIGHT_CAR,
       NORMAL_TO_LEFT_CAR,
       TRUCK,
+      LEAF,
     };
 
     public uint[,] BackgroundRep;
@@ -83,6 +88,14 @@ namespace Levels
           return Tiles.StreetTile(4, position);
         case TILE.GRASS:
           return Tiles.GrassTile(position);
+        case TILE.WATER1:
+          return Tiles.Water(3, position);
+        case TILE.WATER2:
+          return Tiles.Water(4, position);
+        case TILE.WATER3:
+          return Tiles.Water(5, position);
+        case TILE.WATER4:
+          return Tiles.Water(6, position);
         default:
           return null;
       }      
@@ -102,6 +115,8 @@ namespace Levels
           return MovingObjects.NormalCar(position, 1);
         case ACTOR.NORMAL_TO_LEFT_CAR:
           return MovingObjects.NormalCar(position, -1);
+        case ACTOR.LEAF:
+          return new Leaf(position);
         default:
           return null;
       }

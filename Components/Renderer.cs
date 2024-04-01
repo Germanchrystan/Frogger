@@ -74,6 +74,10 @@ namespace Components
       this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       Renderer.AddToList(this);
     }
+    public void SetNewFrameData(FrameData frameData)
+    {
+      this.frameData = frameData;
+    }
     public void Render(SpriteBatch spriteBatch)
     {
       spriteBatch.Draw(frameData.texture, transform.Rect, frameData.rect, color);
