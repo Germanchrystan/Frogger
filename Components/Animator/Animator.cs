@@ -81,7 +81,7 @@ namespace Components.GraphicComponents
       timer.SetMax(newTimerMax);
       timer.ResetTimer();
     }
-    public void setAnimation(string newState)
+    public void SetAnimation(string newState)
     {
       if (!Animations.ContainsKey(newState)) return;
       currentAnimation = newState;
@@ -96,7 +96,7 @@ namespace Components.GraphicComponents
     {
       if (stateManager.GetState != currentAnimation)
       {
-        setAnimation(stateManager.GetState);
+        SetAnimation(stateManager.GetState);
       }
     }
     public FrameData GetCurrentFrameData()

@@ -8,7 +8,7 @@ namespace Entities
   public class MovingObjectUpdater: Component, UpdateableComponent
   {
     private GameObject parent;
-    public MovingObjectUpdater(MovingObject parent)
+    public MovingObjectUpdater(GameObject parent)
     {
       this.parent = parent;
       Updater.UpdaterList.Add(this);

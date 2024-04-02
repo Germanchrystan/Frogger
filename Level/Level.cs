@@ -26,7 +26,7 @@ namespace Levels
     enum ACTOR
     {
       PLAYER = 4,
-      WATER,
+      TURTLE_TO_LEFT,
       TO_RIGHT_LOG,
       TO_LEFT_LOG,
       NORMAL_TO_RIGHT_CAR,
@@ -117,6 +117,8 @@ namespace Levels
           return MovingObjects.NormalCar(position, -1);
         case ACTOR.LEAF:
           return new Leaf(position);
+        case ACTOR.TURTLE_TO_LEFT:
+          return new Turtle(position, -1);
         default:
           return null;
       }

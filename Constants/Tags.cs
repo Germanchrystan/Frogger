@@ -8,5 +8,6 @@ namespace Constants
     public static string WATER = "WATER";
     public static string LEAF = "LEAF";
     public static string TAKEN_LEAF = "TAKEN_LEAF";
+    public static string TURTLE = "TURTLE";
   }
 }

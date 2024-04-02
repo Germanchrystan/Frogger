@@ -18,5 +18,10 @@ namespace Managers
     {
       return new Rectangle(General.SIZE * x, General.SIZE * y, General.SIZE, General.SIZE);
     }
+    public static Rectangle GetFrameRectangle(int x, int y, bool flipX)
+    {
+      if (!flipX) return new Rectangle(General.SIZE * x, General.SIZE * y, General.SIZE, General.SIZE);
+      return new Rectangle(General.SIZE * x + General.SIZE, General.SIZE * y, -General.SIZE, General.SIZE);
+    }
   }
 }

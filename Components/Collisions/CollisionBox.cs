@@ -18,7 +18,6 @@ namespace Components.Collisions
       this.colliderTransform = colliderTransform;
     }
   }
-  
   public class CollisionList
   {
     private int activeNum;
