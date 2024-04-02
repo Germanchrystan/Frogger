@@ -9,13 +9,19 @@ namespace Components.GraphicComponents
     private float frameDuration;
     public float FrameDuration { get { return frameDuration; }}
     private Rectangle spriteRect;
-    // private Action keyAction;
+    public Action frameAction;
     public Rectangle SpriteRect { get { return spriteRect; }}
-
     public Frame(float frameDuration, Rectangle spriteRect)
     {
       this.frameDuration = frameDuration;
       this.spriteRect = spriteRect;
+      this.frameAction = null;
+    }
+    public Frame(float frameDuration, Rectangle spriteRect, Action frameAction)
+    {
+      this.frameDuration = frameDuration;
+      this.spriteRect = spriteRect;
+      this.frameAction = frameAction;
     }
   }
 }

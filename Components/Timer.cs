@@ -85,7 +85,6 @@ namespace Components
     {
       if (OnTimeOut != null) OnTimeOut(this, message);
       ResetTimer();
-      // SideTimeOutAction();
     }
   }
 }

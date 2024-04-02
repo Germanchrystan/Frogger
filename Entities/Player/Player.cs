@@ -15,6 +15,8 @@ namespace Entities
 {
   public class Player:  GameObject, CollisionHandler
   {
+    int speed = 100;
+    const int layer = 7;
     private Dictionary<Keys, Command> playerBindings = new Dictionary<Keys, Command>()
     {
       {Keys.Up, new Command(Commands.COMMAND_UP)},
@@ -23,7 +25,6 @@ namespace Entities
       {Keys.Right, new Command(Commands.COMMAND_RIGHT)},
     };
     
-    int speed = 100;
 
     public void onStartDeadAnimation()
     {
@@ -52,7 +53,7 @@ namespace Entities
       Animation DeadAnimation = new Animation(PlayerConstants.DEAD, false, new Frame[]{ new Frame(1, GraphicManager.GetFrameRectangle(3,0))}, onStartDeadAnimation, onEndDeadAnimation);
 
       Components.Add(Constants.Components.ANIMATOR, new Animator(this, IdleAnimation).AddAnimation(DeadAnimation));
-      Components.Add(Constants.Components.RENDERER, new AnimatorRenderer(7, this));
+      Components.Add(Constants.Components.RENDERER, new AnimatorRenderer(layer, this));
     }
     public void OnCollision(object source, CollisionBox colliding)
     {
