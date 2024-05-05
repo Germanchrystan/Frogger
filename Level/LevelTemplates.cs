@@ -1,7 +1,34 @@
-namespace Levels
+using System.Collections.Generic;
+using Constants;
+using Managers;
+
+namespace Scenes
 {
   public class LevelTemplates
   {
+    public static List<ColliderRelation> colliderRelations = new List<ColliderRelation>
+    {
+      new ColliderRelation()
+      {
+        mainColliderTag = Tags.PLAYER, relatedCollidersTag = Tags.CAR
+      },
+      new ColliderRelation()
+      {
+        mainColliderTag = Tags.PLAYER, relatedCollidersTag = Tags.WATER
+      },
+      new ColliderRelation()
+      {
+        mainColliderTag = Tags.PLAYER, relatedCollidersTag = Tags.LOG
+      },
+      new ColliderRelation()
+      {
+        mainColliderTag = Tags.PLAYER, relatedCollidersTag = Tags.TURTLE
+      },
+      new ColliderRelation()
+      {
+        mainColliderTag = Tags.PLAYER, relatedCollidersTag = Tags.LEAF
+      }      
+    };
     public static uint[,] LVL1_B = new uint[11, 11]{
       {8,9,8,10,8,11,8,12,8,9,8},
       {9,10,9,10,9,10,9,10,9,10,9},

@@ -4,6 +4,7 @@ using Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Prototypes;
+using Components.State;
 
 namespace Components.GraphicComponents
 {
@@ -22,7 +23,7 @@ namespace Components.GraphicComponents
     private Timer timer;
     private Texture2D atlas;
     private StateManager stateManager;
-    
+    public string Type() { return Constants.Components.ANIMATOR; }
     public Animator(GameObject parent)
     {
       this.timer = new Timer(1, "animation over", false, this);
@@ -36,7 +37,9 @@ namespace Components.GraphicComponents
       this.currentAnimation = defaultAnimation.Name;
       this.AddAnimation(defaultAnimation);
       this.timer = new Timer(defaultAnimation.GetCurrentFrameDuration(0), "animation over", true, this);
+      
       this.parent = parent;
+      parent.AddComponent("ANIMATION_TIMER", this.timer);
       this.atlas = GraphicManager.Atlas; // TODO: Change for generic engine
       this.stateManager = parent.GetComponent<StateManager>(Constants.Components.STATE_MANAGER);
     }
@@ -94,9 +97,9 @@ namespace Components.GraphicComponents
     }
     public void checkAnimatorStatus()
     {
-      if (stateManager.GetState != currentAnimation)
+      if (stateManager.CurrentState != currentAnimation)
       {
-        SetAnimation(stateManager.GetState);
+        SetAnimation(stateManager.CurrentState);
       }
     }
     public FrameData GetCurrentFrameData()

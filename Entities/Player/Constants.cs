@@ -2,7 +2,7 @@ namespace Entities
 {
   public class PlayerConstants
   {
-    public static string PLAYING = "PLAYING";
-    public static string DEAD = "DEAD";
+    public const string PLAYING = "PLAYING";
+    public const string DEAD = "DEAD";
   }
 }

@@ -12,6 +12,8 @@ public class Transform: Component
     private Rectangle rect;
     private List<Transform> childTransforms = new List<Transform>();
     private Vector2 offset;
+    public bool Active { get { return true; } }
+    public string Type() { return Constants.Components.TRANSFORM; }
     // Constructor for parent transform
     public Transform(Vector2 position, Vector2 size)
     {

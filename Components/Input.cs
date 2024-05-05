@@ -24,11 +24,14 @@ namespace Components
     private Dictionary<Keys, Command> bindings = new Dictionary<Keys, Command>();
     private int activeNum;
     private string incomingCommand = null;
+    public string Type() { return Constants.Components.INPUT; } 
+    
     public Input(Dictionary<Keys, Command> bindings)
     {
       this.bindings = bindings;
       this.activeNum = bindings.Count();
     }
+
     public void SetActive(Keys key)
     {
 

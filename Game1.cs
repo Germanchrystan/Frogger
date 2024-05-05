@@ -1,9 +1,7 @@
-﻿using Components;
-using Entities;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Levels;
+using Scenes;
 using Managers;
 
 namespace Frogger;
@@ -12,6 +10,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Scene level;
 
     public Game1()
     {
@@ -36,19 +35,16 @@ public class Game1 : Game
         Texture2D whiteTexture = new Texture2D(GraphicsDevice, 1, 1);
         whiteTexture.SetData<Color>(new Color[] { Color.White });
 
-        Level level = new Level(whiteTexture, LevelTemplates.LVL1_B, LevelTemplates.LVL1_A);
+        level = new Scene(LevelTemplates.LVL1_B, LevelTemplates.LVL1_A, LevelTemplates.colliderRelations);
         level.Load();
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) // || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        Updater.Update(gameTime);
-        CollisionManager.Update();
-        Timer.UpdateTimers(gameTime);
-        StateManager.UpdateStates();
+        level.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -57,7 +53,7 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin();
-        Renderer.Render(_spriteBatch);
+        level.Render(_spriteBatch);
         _spriteBatch.End();
         base.Draw(gameTime);
     }

@@ -2,18 +2,16 @@ using Microsoft.Xna.Framework;
 using Components;
 using Prototypes;
 
-
 namespace Entities
 {
-  public class MovingObjectUpdater: Component, UpdateableComponent
+  public class MovingObjectUpdater: Updater
   {
     private GameObject parent;
-    public MovingObjectUpdater(GameObject parent)
+    public MovingObjectUpdater(GameObject parent):base(true, parent)
     {
       this.parent = parent;
-      Updater.UpdaterList.Add(this);
     }
-    public void Update(GameTime gameTime)
+    override public void Update(GameTime gameTime)
     {
       float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
       Movement movement = parent.GetComponent<Movement>(Constants.Components.MOVEMENT);

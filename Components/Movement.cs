@@ -7,6 +7,7 @@ namespace Components
     public int xDirection;
     public int yDirection;
     public int speed;
+    public string Type() {return Constants.Components.MOVEMENT; } 
 
     public Movement(int speed, int xDirection, int yDirection)
     {
