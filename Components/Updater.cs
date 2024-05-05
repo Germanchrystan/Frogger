@@ -1,19 +1,27 @@
+using System;
+
 using Microsoft.Xna.Framework;
 using Prototypes;
+using Components.State;
 using System.Collections.Generic;
 
 namespace Components
 {
-  public class Updater
+  public class Updater: UpdateableIterableComponent<GameTime>, Component
   {
-    public static List<UpdateableComponent> UpdaterList = new List<UpdateableComponent>();
-    
-    public static void Update(GameTime gameTime)
+    private Dictionary<string, List<Action<GameTime>>> stateActions = new Dictionary<string, List<Action<GameTime>>>();
+    override public string Type() { return Constants.Components.UPDATER; } 
+
+    public Updater(bool startActive, GameObject parent)
     {
-      for(int i = 0; i < UpdaterList.Count;i++)
-      {
-        UpdaterList[i].Update(gameTime);
-      }
+      Active = startActive;
     }
+
+    public void AddState(string name, List<Action<GameTime>> actions)
+    {
+      stateActions.Add(name, actions);
+    }
+
+    override public void Update(GameTime gameTime){}
   }
 }

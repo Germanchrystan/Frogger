@@ -18,18 +18,22 @@ namespace Components
   }
   public class Renderer: Layered
   {
-    public static List<Renderable> RendererList = new List<Renderable>();
-    public static void AddToList(Renderable renderable)
+    List<Renderable> RendererList = new List<Renderable>();
+    public void AddToList(Renderable renderable)
     {
       RendererList.Add(renderable);
       QuickSort.Sort(RendererList, 0, RendererList.Count - 1);
     }
-    public static void Render(SpriteBatch spriteBatch)
+    public void Render(SpriteBatch spriteBatch)
     {
       for(int i = 0; i < RendererList.Count; i++)
       {
         RendererList[i].Render(spriteBatch);
       }
+    }
+    public void Clear()
+    {
+      RendererList.Clear();
     }
   }
   // Simple Texture Renderer
@@ -40,15 +44,17 @@ namespace Components
     Texture2D texture;
     int layer;
     public int Layer{ get { return layer;}}
+    private bool active;
+    public bool Active { get { return active; } }
+    public string Type() { return Constants.Components.RENDERER; } 
     public SimpleTextureRenderer(Texture2D texture, Color color, int layer, GameObject parent)
     {
       this.color = color;
       this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       this.texture = texture;
       this.layer = layer;
-      Renderer.AddToList(this);
+      this.active = true;
     }
-    
     public void setColor (Color newColor)
     {
       color = newColor;
@@ -65,14 +71,17 @@ namespace Components
     Color color;
     int layer;
     public int Layer{ get { return layer;}}
+    private bool active;
+    public bool Active { get { return active; } }
     Transform transform;
+    public string Type() { return Constants.Components.RENDERER; } 
     public SingleFrameRenderer(FrameData frameData, Color color, int layer, GameObject parent)
     {
       this.frameData = frameData;
       this.color = color;
       this.layer = layer;
       this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
-      Renderer.AddToList(this);
+      this.active = true;
     }
     public void SetNewFrameData(FrameData frameData)
     {
@@ -91,13 +100,16 @@ namespace Components
     Animator animator;
     int layer;
     public int Layer{ get { return layer;}}
+    public string Type () { return Constants.Components.RENDERER; } 
+    private bool active;
+    public bool Active { get { return active; } }
     public AnimatorRenderer(int layer, GameObject parent)
     {
       this.transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       this.animator = parent.GetComponent<Animator>(Constants.Components.ANIMATOR);
       this.layer = layer;
       this.color = Color.White;
-      Renderer.AddToList(this);
+      this.active = true;
     }
     public void Render(SpriteBatch spriteBatch)
     {

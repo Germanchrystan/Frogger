@@ -1,12 +1,13 @@
 using Microsoft.Xna.Framework;
 
 using Components;
+using Components.State;
 using Prototypes;
 using System;
 
 namespace Entities
 {
-  public class PlayerUpdater: Component, UpdateableComponent
+  public class PlayerUpdater: Updater
   {
     Input input;
     Transform transform;
@@ -14,21 +15,21 @@ namespace Entities
     StateManager stateManager;
     int xDirection = 0;
     int yDirection = 0;
-    public PlayerUpdater(GameObject parent)
+    
+    public PlayerUpdater(bool startActive, GameObject parent): base(startActive, parent)
     {
       input = parent.GetComponent<Input>(Constants.Components.INPUT);
       transform = parent.GetComponent<Transform>(Constants.Components.TRANSFORM);
       movement = parent.GetComponent<Movement>(Constants.Components.MOVEMENT);
       stateManager = parent.GetComponent<StateManager>(Constants.Components.STATE_MANAGER);
-      Updater.UpdaterList.Add(this);
     }
-    public void Update(GameTime gameTime)
+    override public void Update(GameTime gameTime)
     {
-      if (stateManager.GetState == PlayerConstants.PLAYING)
+      if (stateManager.CurrentState == PlayerConstants.PLAYING)
       {
         PlayingStateUpdate(gameTime);
       }
-      if (stateManager.GetState == PlayerConstants.DEAD)
+      if (stateManager.CurrentState == PlayerConstants.DEAD)
       { 
         DeadStateUpdate(gameTime);
       }
@@ -96,12 +97,10 @@ namespace Entities
         transform.Position = new Vector2(newXMovmenet, transform.Position.Y);
       }
       movement.resetMovement();
-      // stateManager.SetState(PlayerConstants.PLAYING);
     }
 
     public void DeadStateUpdate(GameTime gameTime)
     {
-      // stateManager.SetState(PlayerConstants.DEAD);
     }
   }
 }
