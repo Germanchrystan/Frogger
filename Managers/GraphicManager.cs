@@ -9,6 +9,7 @@ namespace Managers
   class GraphicManager
   {
     public static Texture2D Atlas;
+    public static Texture2D BlackTexture;
     public static void LoadContent(ContentManager content)
     {
       Atlas = content.Load<Texture2D>("Frogger");

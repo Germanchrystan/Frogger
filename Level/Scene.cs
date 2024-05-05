@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-
+using Microsoft.Xna.Framework.Input;
 using Entities;
 using Prototypes;
 using Components;
@@ -9,7 +9,6 @@ using Components.State;
 using Managers;
 using Components.Collisions;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq.Expressions;
 
 namespace Scenes
 {
@@ -25,6 +24,18 @@ namespace Scenes
     private UpdateableIterableComponentList<StateManager, object> stateManagers = new UpdateableIterableComponentList<StateManager, object>();
     private UpdateableIterableComponentList<Timer, GameTime> timers = new UpdateableIterableComponentList<Timer, GameTime>();
     private Renderer renderer = new Renderer();
+
+    private const string PLAYING_STATE_NAME = "PLAYING";
+    private const string PAUSED_STATE_NAME = "PAUSED";
+    private State playingState = new State(PLAYING_STATE_NAME, new List<string>{PAUSED_STATE_NAME});
+    private State pausedState = new State(PAUSED_STATE_NAME, new List<string>{PLAYING_STATE_NAME});
+    private StateManager stateManager;
+    private Input input;
+
+    private Dictionary<Keys, Command> levelBindings = new Dictionary<Keys, Command>()
+    {
+      {Keys.Enter, new Command(Constants.Commands.COMMAND_PAUSE)},
+    };
     public Scene(uint[,] BackgroundRep, uint[,] ActorsRep, List<ColliderRelation> colliderRelations)
     {
       this.BackgroundRep = BackgroundRep;
@@ -32,6 +43,9 @@ namespace Scenes
       int TileLength = BackgroundRep.Length * BackgroundRep.GetLength(0);
       TilesPool = new Tile[TileLength];
       collisionManager = new CollisionManager(colliderRelations);
+      stateManager = new StateManager(this, playingState).AddState(pausedState);
+      input = new Input(levelBindings);
+      // this.AddComponent(Constants.Components.STATE_MANAGER, );
     }
     public void Load()
     {
@@ -72,7 +86,7 @@ namespace Scenes
 
     }
 
-    public void Update(GameTime gameTime)
+    private void gameCycle(GameTime gameTime)
     {
       updaters.Update(gameTime);
       collisionManager.Update();
@@ -80,9 +94,32 @@ namespace Scenes
       stateManagers.Update(null);
     }
 
+    public void Update(GameTime gameTime)
+    {
+      string incomingCommand = input.CheckAndGetCommand();
+
+      if (incomingCommand == Constants.Commands.COMMAND_PAUSE)
+      {
+        if(stateManager.CurrentState == PLAYING_STATE_NAME)
+        {
+          stateManager.SetState(PAUSED_STATE_NAME);
+        }
+        else
+        {
+          stateManager.SetState(PLAYING_STATE_NAME);
+        }
+      }
+      if(stateManager.CurrentState == PLAYING_STATE_NAME)
+      {
+        gameCycle(gameTime);
+      }
+      stateManager.Update(null);
+    }
+
     public void Render(SpriteBatch spriteBatch)
     {
       renderer.Render(spriteBatch);
+      if(stateManager.CurrentState == PAUSED_STATE_NAME) spriteBatch.Draw(GraphicManager.BlackTexture, new Rectangle(0, 0, 1000, 1000), new Color(0, 0, 0, 0.5f) ); 
     }
 
     public void Unload()

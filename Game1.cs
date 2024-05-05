@@ -32,8 +32,9 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        Texture2D whiteTexture = new Texture2D(GraphicsDevice, 1, 1);
-        whiteTexture.SetData<Color>(new Color[] { Color.White });
+        Texture2D blackTexture = new Texture2D(GraphicsDevice, 1, 1);
+        blackTexture.SetData(new Color[] { Color.Black });
+        GraphicManager.BlackTexture = blackTexture;
 
         level = new Scene(LevelTemplates.LVL1_B, LevelTemplates.LVL1_A, LevelTemplates.colliderRelations);
         level.Load();
