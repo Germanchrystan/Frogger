@@ -1,5 +1,5 @@
 using System;
-using Components;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scenes;
@@ -9,10 +9,10 @@ namespace Managers
   class SceneManager
   {
     private Scene currentScene;
-    
     public SceneManager(Scene currentScene)
     {
       this.currentScene = currentScene;
+      this.currentScene.SceneChangeRequest += HandleSceneChangeRequest;
     }
     public void Start()
     {
@@ -22,6 +22,7 @@ namespace Managers
     {
       currentScene.Unload();
       currentScene = nextScene;
+      this.currentScene.SceneChangeRequest += HandleSceneChangeRequest;
       currentScene.Load();
     }
     public void Update(GameTime gameTime)
@@ -32,10 +33,12 @@ namespace Managers
     {
       currentScene.Render(spriteBatch);
     }
-
-    public void OnSceneTransitionRequest(object source, string newScene)
+    public void HandleSceneChangeRequest(object source, string newScene)
     {
-      // Load JSON
+      currentScene.Unload();
+      // TODO: Load JSON
+      Scene level = new Level(LevelTemplates.LVL1_B, LevelTemplates.LVL1_A, LevelTemplates.colliderRelations);
+      SceneTransition(level);
     }
   }
 }

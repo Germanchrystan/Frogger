@@ -10,8 +10,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Scene level;
-
+    private SceneManager sceneManager;
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -36,8 +35,9 @@ public class Game1 : Game
         blackTexture.SetData(new Color[] { Color.Black });
         GraphicManager.BlackTexture = blackTexture;
 
-        level = new Scene(LevelTemplates.LVL1_B, LevelTemplates.LVL1_A, LevelTemplates.colliderRelations);
-        level.Load();
+        // Scene level = new Level(LevelTemplates.LVL1_B, LevelTemplates.LVL1_A, LevelTemplates.colliderRelations);
+        Scene menu = new Menu(new uint[0,0]{}, new uint[0,0]{});
+        sceneManager = new SceneManager(menu);
     }
 
     protected override void Update(GameTime gameTime)
@@ -45,16 +45,16 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed) // || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        level.Update(gameTime);
+        sceneManager.Update(gameTime);
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        GraphicsDevice.Clear(Color.Black);
         _spriteBatch.Begin();
-        level.Render(_spriteBatch);
+        sceneManager.Render(_spriteBatch);
         _spriteBatch.End();
         base.Draw(gameTime);
     }
