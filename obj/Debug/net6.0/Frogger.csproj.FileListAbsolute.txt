@@ -24,3 +24,4 @@
 /Users/gchrystan/C#/Frogger/obj/Debug/net6.0/Frogger.genruntimeconfig.cache
 /Users/gchrystan/C#/Frogger/obj/Debug/net6.0/ref/Frogger.dll
 /Users/gchrystan/C#/Frogger/bin/Debug/net6.0/Content/Frogger.xnb
+/Users/gchrystan/C#/Frogger/bin/Debug/net6.0/Content/Font.xnb

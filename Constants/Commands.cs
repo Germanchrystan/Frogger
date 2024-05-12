@@ -10,5 +10,8 @@ namespace Constants
 
     // Level Command
     public const string COMMAND_PAUSE = "COMMAND_PAUSE";
+
+    // Menu Command
+    public const string START_COMMAND = "START_COMMAND";
   }
 }
