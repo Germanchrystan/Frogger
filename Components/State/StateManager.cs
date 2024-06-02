@@ -14,7 +14,7 @@ namespace Components.State
     private State nextState;
     private State defaultState;
     public override string Type(){ return Constants.Components.STATE_MANAGER; }
-
+    public event EventHandler<string> MessageSent;
     public StateManager(GameObject parent, State defaultState)
     {
       this.parent = parent;
@@ -42,8 +42,7 @@ namespace Components.State
     {
       foreach(string newState in stateRequestQueue)
       {
-        
-        if (currentState.IsNextStateAllowed(newState) && states.ContainsKey(newState))
+        if (nextState.IsNextStateAllowed(newState) && states.ContainsKey(newState))
         {
           State state = states[newState];
           nextState = state;
@@ -55,6 +54,7 @@ namespace Components.State
     override public void Update(object nil)
     {
       proccessStateRequests();
+      if (currentState != nextState && nextState.Message != null) OnSendMessage(nextState.Message);
       currentState = nextState;
       nextState = defaultState;
     }
@@ -63,6 +63,11 @@ namespace Components.State
     {
       states.Add(newState.Name, newState);
       return this;
+    }
+
+    public void OnSendMessage(string message)
+    {
+      MessageSent?.Invoke(this, message);
     }
   }
 }

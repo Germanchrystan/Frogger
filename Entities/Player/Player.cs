@@ -41,7 +41,7 @@ namespace Entities
     }
 
     private State playingState = new State(PlayerConstants.PLAYING, new List<string>{PlayerConstants.DEAD});
-    private State deadState = new State(PlayerConstants.DEAD, new List<string>{PlayerConstants.PLAYING});
+    private State deadState = new State(PlayerConstants.DEAD, new List<string>{PlayerConstants.PLAYING}, "DEAD");
 
     public Player(Vector2 position)
     {
@@ -70,7 +70,7 @@ namespace Entities
       {
         stateManager.SetState(PlayerConstants.DEAD);
       }
-      if (MOVING_PLATFORMS_TAGS.Contains(colliding.GetTag()))
+      if (colliding.GetTag() == Tags.LOG || colliding.GetTag() == Tags.TURTLE)
       {
         Movement collidingMovement = colliding.Parent.GetComponent<Movement>(Constants.Components.MOVEMENT);
         movement.xDirection = collidingMovement.xDirection;

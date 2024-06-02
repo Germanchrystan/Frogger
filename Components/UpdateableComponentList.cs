@@ -69,7 +69,7 @@ namespace Components
     {
       for (int i = 0; i < activeNum; i++)
       {
-        components[i].Update(updateArgument);
+        components[i]?.Update(updateArgument);
       }
     }
   }

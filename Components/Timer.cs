@@ -11,7 +11,6 @@ namespace Components
     private string message;
     public event EventHandler<string> OnTimeOut;
     override public string Type() { return Constants.Components.TIMER; }
-
     public Timer(float max, string message, bool startActive, TimeOutHandler timeOutHandler)
     {
       this.max = max;

@@ -41,7 +41,7 @@ namespace Scenes
 
       if (incomingCommand == Constants.Commands.START_COMMAND)
       {
-        this.OnSceneChangeRequest("LV1");
+        this.OnSceneChangeRequest(Constants.Scenes.LV1);
       }
     }
     override public void Render(SpriteBatch spriteBatch)
@@ -68,7 +68,6 @@ namespace Scenes
     {
       this.Components.Clear();
     }
-
     protected override void OnSceneChangeRequest(string nextScene)
     {
       base.OnSceneChangeRequest(nextScene);

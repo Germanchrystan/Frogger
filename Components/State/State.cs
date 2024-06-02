@@ -8,6 +8,13 @@ namespace Components.State
   {
     public string Name;
     private List<string> allowedStates;
+    public string Message = null;
+    public State(string name, List<string> allowedStates, string message)
+    {
+      this.Name = name;
+      this.allowedStates = allowedStates;
+      this.Message = message;
+    }
     public State(string name, List<string> allowedStates)
     {
       this.Name = name;
@@ -18,7 +25,6 @@ namespace Components.State
       this.Name = name;
       this.allowedStates = new List<string>{};
     }
-
     public void setAllowedStates(List<string> allowedStates)
     {
       this.allowedStates = allowedStates;
