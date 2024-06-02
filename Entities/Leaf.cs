@@ -16,7 +16,7 @@ namespace Entities
     private const string AVAILABLE_STATE = "AVAILABLE";
     private const string TAKEN_STATE = "TAKEN";
     private State available = new State(AVAILABLE_STATE, new List<string>{TAKEN_STATE});
-    private State taken = new State(TAKEN_STATE, new List<string>{});
+    private State taken = new State(TAKEN_STATE, new List<string>{}, Constants.Components.GOAL_LEVEL_MSG);
     FrameData availableFrameData = new FrameData{ texture = GraphicManager.Atlas, rect = GraphicManager.GetFrameRectangle(0,2)};
     FrameData takenFrameData = new FrameData{ texture = GraphicManager.Atlas, rect = GraphicManager.GetFrameRectangle(1,2)};
 

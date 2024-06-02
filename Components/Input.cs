@@ -6,21 +6,37 @@ using Prototypes;
 
 namespace Components
 {
+  public enum CommandType
+  {
+    TRIGGER,
+    CONTINUOUS,
+  }
   public class Command
   {
     private string commandName;
     private bool isActive;
+    private CommandType commandType;
     public Command(string commandName)
     {
       this.commandName = commandName;
       this.isActive = true;
+      this.commandType = CommandType.TRIGGER;
+    }
+    
+    public Command(string commandName, CommandType commandType)
+    {
+      this.commandName = commandName;
+      this.isActive = true;
+      this.commandType = commandType;
     }
     public string Name { get { return commandName; }}
     public bool IsActive { get { return isActive; } set { isActive = value; } }
+    public bool IsTrigger { get { return commandType == CommandType.TRIGGER; } }
   }
-
+  // Input Component
   public class Input: Component
   {
+    public static List<Keys> GlobalCommands = new List<Keys>(); // TODO: Continue this
     private Dictionary<Keys, Command> bindings = new Dictionary<Keys, Command>();
     private int activeNum;
     private string incomingCommand = null;
@@ -50,7 +66,7 @@ namespace Components
       if (keys.Length > 0 && bindings.ContainsKey(keys[0]) && bindings[keys[0]].IsActive)
       {
         incomingCommand = bindings[keys[0]].Name;
-        bindings[keys[0]].IsActive = false;
+        if (bindings[keys[0]].IsTrigger) bindings[keys[0]].IsActive = false;
         return;
       }
       incomingCommand = "null";

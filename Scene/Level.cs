@@ -1,35 +1,31 @@
 using System;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+
 using Entities;
 using Prototypes;
 using Components;
 using Components.State;
 using Components.Collisions;
+using Constants;
 using Managers;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Scenes
 {
   public class Level: Scene
   {
-    public GameObject[] ActorsPool;
-    public Tile[] TilesPool;
-
-    private UpdateableIterableComponentList<Updater, GameTime> updaters = new UpdateableIterableComponentList<Updater, GameTime>();
-    private CollisionManager collisionManager = new CollisionManager();
-    private UpdateableIterableComponentList<StateManager, object> stateManagers = new UpdateableIterableComponentList<StateManager, object>();
-    private UpdateableIterableComponentList<Timer, GameTime> timers = new UpdateableIterableComponentList<Timer, GameTime>();
-    private Renderer renderer = new Renderer();
-
+    private Stream stream = new Stream();
     private const string PLAYING_STATE_NAME = "PLAYING";
     private const string PAUSED_STATE_NAME = "PAUSED";
     private State playingState = new State(PLAYING_STATE_NAME, new List<string>{PAUSED_STATE_NAME});
     private State pausedState = new State(PAUSED_STATE_NAME, new List<string>{PLAYING_STATE_NAME});
     private StateManager stateManager;
     private Input input;
-
+    private Counter goalCounter;
+    private Counter livesCounter;
+    private List<ColliderRelation> colliderRelations;
     private Dictionary<Keys, Command> levelBindings = new Dictionary<Keys, Command>()
     {
       {Keys.Enter, new Command(Constants.Commands.COMMAND_PAUSE)},
@@ -38,11 +34,16 @@ namespace Scenes
     {
       this.BackgroundRep = BackgroundRep;
       this.ActorsRep = ActorsRep;
+      this.colliderRelations = colliderRelations;
       int TileLength = BackgroundRep.Length * BackgroundRep.GetLength(0);
-      TilesPool = new Tile[TileLength];
-      collisionManager = new CollisionManager(colliderRelations);
       stateManager = new StateManager(this, playingState).AddState(pausedState);
       input = new Input(levelBindings);
+      // Counters
+      goalCounter = new Counter(0, -1, 5, Constants.Scenes.MAIN_MENU);
+      livesCounter = new Counter(5, 0, 6, Constants.Scenes.GAME_OVER);
+      goalCounter.LimitReached += HandleMessage;
+      livesCounter.LimitReached += HandleMessage;
+      
       // this.AddComponent(Constants.Components.STATE_MANAGER, );
     }
     override public void Load()
@@ -61,33 +62,16 @@ namespace Scenes
           if (newActor != null) tmpActorList.Add(newActor);
         }
       }
-      TilesPool = tmpTileList.ToArray();
-      ActorsPool = tmpActorList.ToArray();
-      foreach (GameObject go in TilesPool)
-      {
-        foreach (Component c in go.Components.Values)
-        {
-          HandleChildComponent(c);
-        }
-      }
-      foreach (GameObject go in ActorsPool)
-      {
-        foreach (Component c in go.Components.Values)
-        {
-          HandleChildComponent(c);
-        }
-      }
+      stream.LoadTiles(tmpTileList);
+      stream.LoadActors(tmpActorList);
+      stream.LoadColliderRelations(colliderRelations);
+      stream.LoadComponents();
+      stream.MessageSent += HandleMessage;
     }
-    public void LoadColliderRelations()
-    {
 
-    }
     private void gameCycle(GameTime gameTime)
     {
-      updaters.Update(gameTime);
-      collisionManager.Update();
-      timers.Update(gameTime);
-      stateManagers.Update(null);
+      stream.Update(gameTime);
     }
     override public void Update(GameTime gameTime)
     {
@@ -113,46 +97,46 @@ namespace Scenes
 
     override public void Render(SpriteBatch spriteBatch)
     {
-      renderer.Render(spriteBatch);
-      if(stateManager.CurrentState == PAUSED_STATE_NAME) spriteBatch.Draw(GraphicManager.BlackTexture, new Rectangle(0, 0, 1000, 1000), new Color(0, 0, 0, 0.5f) ); 
+      stream.Render(spriteBatch);
+      if(stateManager.CurrentState == PAUSED_STATE_NAME) spriteBatch.Draw(GraphicManager.BlackTexture, new Rectangle(0, 0, 1000, 1000), new Color(0, 0, 0, 0.5f) );
+      spriteBatch.DrawString(
+        GraphicManager.Font, "Lives " + livesCounter.Value, 
+        new Vector2(10, Constants.General.WINDOW_HEIGHT - 30),
+        Color.Green
+      );
     }
 
     override public void Unload()
     {
-      Array.Clear(TilesPool);
-      Array.Clear(ActorsPool);
-
-      updaters.Clear();
-      //collisionManager.Clear();
-      timers.Clear();
-      stateManagers.Clear();
-      renderer.Clear();
-
+      stream.Unload();
       this.Components.Clear();
     }
 
-    public void HandleChildComponent(Component component)
+    public void HandleMessage(object sender, string message)
     {
-      switch(component.Type())
+      switch(message)
       {
-        case Constants.Components.UPDATER:
-          updaters.AddComponent((Updater)component);
+        case Constants.Components.DEAD_LEVEL_MSG:
+          livesCounter.DecreaseCounter();
           break;
-        case Constants.Components.COLLISION_BOX:
-          collisionManager.Add((CollisionBox)component);
+        case Constants.Components.GOAL_LEVEL_MSG:
+          goalCounter.IncreaseCounter();
           break;
-        case Constants.Components.TIMER:
-          timers.AddComponent((Timer)component);
+        case Constants.Scenes.GAME_OVER:
+          OnSceneChangeRequest(message);
           break;
-        case Constants.Components.STATE_MANAGER:
-          stateManagers.AddComponent((StateManager)component);
-          break;
-        case Constants.Components.RENDERER:
-          renderer.AddToList((Renderable)component);
+        case Constants.Scenes.MAIN_MENU:
+          OnSceneChangeRequest(message);
           break;
         default:
-          return;
+          Console.WriteLine("Unknown Message" + message);
+          break;
       }
+    }
+
+    protected override void OnSceneChangeRequest(string nextScene)
+    {
+      base.OnSceneChangeRequest(nextScene);
     }
   }
 }

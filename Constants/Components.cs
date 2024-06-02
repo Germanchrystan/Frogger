@@ -12,5 +12,9 @@ namespace Constants
     public const string SPAWN_POINT = "SPAWN_POINT";
     public const string TIMER = "TIMER";
     public const string ANIMATOR = "ANIMATOR";
+    public const string COUNTER = "COUNTER";
+
+    public const string DEAD_LEVEL_MSG = "DEAD";
+    public const string GOAL_LEVEL_MSG = "GOAL";
   }
 }
